@@ -2,6 +2,10 @@
 var canvas = document.getElementById('mnist_canvas');
 var ctx = canvas.getContext('2d');
 
+// Change styling on context
+ctx.lineWidth = 10.0;
+ctx.strokeStyle = "red";
+
 // Initialize variables
 var flag = false;
 var x, y;
@@ -42,10 +46,19 @@ function draw(res, e) {
    else if (res == "up") {
       // Set flag to false so the canvas will stop drawing
       flag = false;
+      saveImg();
    }
 }
 
 // Clear rectangle
 function clearCanvas() {
    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function saveImg() {
+   var img = new Image();
+   img.onload = function() {
+      ctx.drawImage(img, 0, 0, 28, 28);
+   }
+   img.src = canvas.toDataURL('image/png');
 }
