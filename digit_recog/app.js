@@ -56,9 +56,23 @@ function clearCanvas() {
 }
 
 function saveImg() {
+   // Create new img object to store the img data in
    var img = new Image();
    img.onload = function() {
       ctx.drawImage(img, 0, 0, 28, 28);
+      // Get the data from the img ctx
+      var data = ctx.getImageData(0, 0, 28, 28).data;
+
+      // Create an empty input array then iterate through the context data
+      //    and push it to the input array. The drawing is in red so we can skip
+      //    every four values since the ImageObject is RGBA
+      var input = [];
+      for (i = 0; i < data.length; i += 4) {
+         // Push data to input array and then normalize it to be in [0, 1] range
+         input.push(data[i] / 255);
+      }
+      console.log(input.length);
    }
    img.src = canvas.toDataURL('image/png');
+
 }
