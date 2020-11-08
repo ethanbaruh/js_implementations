@@ -69,7 +69,8 @@ function saveImg() {
       var input = [];
       for (i = 0; i < data.length; i += 4) {
          // Push data to input array and then normalize it to be in [0, 1] range
-         input.push(data[i] / 255);
+         // Subtract by 255 to invert image for MNIST model
+         input.push((data[i] - 255) / 255);
       }
       console.log(input.length);
    }
