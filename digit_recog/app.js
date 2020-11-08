@@ -3,7 +3,7 @@ var canvas = document.getElementById('mnist_canvas');
 var ctx = canvas.getContext('2d');
 
 // Change styling on context
-ctx.lineWidth = 10.0;
+ctx.lineWidth = 15.0;
 ctx.strokeStyle = "red";
 
 // Initialize variables
@@ -67,13 +67,25 @@ function saveImg() {
       //    and push it to the input array. The drawing is in red so we can skip
       //    every four values since the ImageObject is RGBA
       var input = [];
-      for (i = 0; i < data.length; i += 4) {
+      for (var i = 0; i < data.length; i += 4) {
          // Push data to input array and then normalize it to be in [0, 1] range
          // Subtract by 255 to invert image for MNIST model
-         input.push((data[i] - 255) / 255);
+         input.push((data[i]) / 255);
       }
-      console.log(input.length);
+      predict(input);
    }
    img.src = canvas.toDataURL('image/png');
 
+}
+
+async function predict(input) {
+   const model = await tf.loadLayersModel('http://0.0.0.0:8080/model_js/model.json');
+   var inputTensor = tf.tensor(input);
+   inputTensor = inputTensor.reshape([1, 28, 28, 1]);
+   var prediction = model.predict(inputTensor);
+   prediction = prediction.reshape([-1]);
+   prediction = tf.argMax(prediction);
+   console.log(prediction.print());
+
+   window.alert(prediction);
 }
